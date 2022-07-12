@@ -47,63 +47,6 @@ import "views/api/api.js";
 import { stpTemp, strTemp, TempFlowAq, updateRelay} from "./api/api";
 
 const Dashboard = () => {
-  const [bigChartData, setbigChartData] = React.useState("data1");
-  const setBgChartData = (name) => {
-    setbigChartData(name);
-  };
-  const [ThinPlotData, setThinPlotData] = React.useState(Array.from({length: 10}, (_, i) => 0));
-  const [ThoutPlotData, setThoutPlotData] = React.useState(Array.from({length: 10}, (_, i) => 0));
-  const labels = [...Array(10).keys()];
-  const thisData = (canvas) => {
-    let ctx = canvas.getContext("2d");
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-    gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-    gradientStroke.addColorStop(0, "rgba(29,140,248,0)");
-
-    return {
-      labels: labels,
-      datasets: [
-        {
-          label: 'Thin',
-          data: ThinPlotData,
-          fill: true,
-          backgroundColor: ctx.createLinearGradient(0, 230, 0, 50),
-          borderColor: "#1f8ef1",
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: "#1f8ef1",
-          pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#1f8ef1",
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          yAxisID: 'y',
-        },
-        // {
-        //   label: 'Thout',
-        //   data: ThoutPlotData,
-        //   fill: true,
-        //   backgroundColor: ctx.createLinearGradient(0, 230, 0, 50),
-        //   borderColor: "#1f8ef1",
-        //   borderWidth: 2,
-        //   borderDash: [],
-        //   borderDashOffset: 0.0,
-        //   pointBackgroundColor: "#1f8ef1",
-        //   pointBorderColor: "rgba(255,255,255,0)",
-        //   pointHoverBackgroundColor: "#1f8ef1",
-        //   pointBorderWidth: 20,
-        //   pointHoverRadius: 4,
-        //   pointHoverBorderWidth: 15,
-        //   pointRadius: 4,
-        //   yAxisID: 'y1',
-        // },
-      ]
-    };
-  };
 
   const [runStat, setrunStat] = React.useState(false);
   const [Thin, setThin] = React.useState(41.0);
@@ -157,192 +100,168 @@ const Dashboard = () => {
   return (
     <>
       <div className="content">
+        
         <Row>
-          <Col xs="6"> 
-            <Card className="card-chart">
-              <CardHeader>
+          <Col xs="6">
+            <Card className="card-stats">
+              <CardBody>
                 <Row>
-                  <Col className="text-left" sm="6">
-                    <h5 className="card-category">Live Plot</h5>
-                    <CardTitle tag="h4">Temperature</CardTitle>
+                  <Col xs="5">
+                    <div className="info-icon text-center icon-success">
+                      <i className="tim-icons icon-alert-circle-exc" />
+                    </div>
+                  </Col>
+                  <Col xs="7">
+                    <div className="numbers">
+                      {/* <p className="card-category">T<sub>hot</sub> inlet</p> */}
+                      <CardTitle tag="h6">T<sub>1</sub></CardTitle>
+                      <CardTitle tag="h3">{Thin.toFixed(4)} <sup>O</sup>C</CardTitle>
+                    </div>
                   </Col>
                 </Row>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample1[bigChartData]}
-                    // data = {thisData}
-                    options={chartExample1.options}
-                  />
-                </div>
               </CardBody>
+              {/* <CardFooter>
+                <hr />
+                <div className="stats">
+                  <i className="tim-icons icon-refresh-01" /> Update Now
+                </div>
+              </CardFooter> */}
             </Card>
           </Col>
           <Col xs="6">
-            <Row>
-              <Col xs="6">
-                <Card className="card-stats">
-                  <CardBody>
-                    <Row>
-                      <Col xs="5">
-                        <div className="info-icon text-center icon-success">
-                          <i className="tim-icons icon-alert-circle-exc" />
-                        </div>
-                      </Col>
-                      <Col xs="7">
-                        <div className="numbers">
-                          {/* <p className="card-category">T<sub>hot</sub> inlet</p> */}
-                          <CardTitle tag="h6">T<sub>1</sub></CardTitle>
-                          <CardTitle tag="h3">{Thin.toFixed(4)} <sup>O</sup>C</CardTitle>
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                  {/* <CardFooter>
-                    <hr />
-                    <div className="stats">
-                      <i className="tim-icons icon-refresh-01" /> Update Now
+            <Card className="card-stats">
+              <CardBody>
+                <Row>
+                  <Col xs="5">
+                    <div className="info-icon text-center icon-success">
+                      <i className="tim-icons icon-alert-circle-exc" />
                     </div>
-                  </CardFooter> */}
-                </Card>
-              </Col>
-              <Col xs="6">
-                <Card className="card-stats">
-                  <CardBody>
-                    <Row>
-                      <Col xs="5">
-                        <div className="info-icon text-center icon-success">
-                          <i className="tim-icons icon-alert-circle-exc" />
-                        </div>
-                      </Col>
-                      <Col xs="7">
-                        <div className="numbers">
-                        {/* <p className="card-category">T<sub>hot</sub> outlet</p> */}
-                          <CardTitle tag="h6">T<sub>2</sub></CardTitle>
-                          <CardTitle tag="h3">{Thout.toFixed(4)} <sup>O</sup>C</CardTitle>
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                  {/* <CardFooter>
-                    <hr />
-                    <div className="stats">
-                      <i className="tim-icons icon-sound-wave" /> Last Research
+                  </Col>
+                  <Col xs="7">
+                    <div className="numbers">
+                    {/* <p className="card-category">T<sub>hot</sub> outlet</p> */}
+                      <CardTitle tag="h6">T<sub>2</sub></CardTitle>
+                      <CardTitle tag="h3">{Thout.toFixed(4)} <sup>O</sup>C</CardTitle>
                     </div>
-                  </CardFooter> */}
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs="6">
-                <Card className="card-stats">
-                  <CardBody>
-                    <Row>
-                      <Col xs="5">
-                        <div className="info-icon text-center icon-success">
-                          <i className="tim-icons icon-alert-circle-exc" />
-                        </div>
-                      </Col>
-                      <Col xs="7">
-                        <div className="numbers">
-                          {/* <p className="card-category">T<sub>cold</sub> inlet</p> */}
-                          <CardTitle tag="h6">T<sub>3</sub></CardTitle>
-                          <CardTitle tag="h3">{Tcin.toFixed(4)} <sup>O</sup>C</CardTitle>
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                  {/* <CardFooter>
-                    <hr />
-                    <div className="stats">
-                      <i className="tim-icons icon-trophy" /> Customers feedback
+                  </Col>
+                </Row>
+              </CardBody>
+              {/* <CardFooter>
+                <hr />
+                <div className="stats">
+                  <i className="tim-icons icon-sound-wave" /> Last Research
+                </div>
+              </CardFooter> */}
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs="6">
+            <Card className="card-stats">
+              <CardBody>
+                <Row>
+                  <Col xs="5">
+                    <div className="info-icon text-center icon-success">
+                      <i className="tim-icons icon-alert-circle-exc" />
                     </div>
-                  </CardFooter> */}
-                </Card>
-              </Col>
-              <Col xs="6">
-                <Card className="card-stats">
-                  <CardBody>
-                    <Row>
-                      <Col xs="5">
-                        <div className="info-icon text-center icon-success">
-                          <i className="tim-icons icon-alert-circle-exc" />
-                        </div>
-                      </Col>
-                      <Col xs="7">
-                        <div className="numbers">
-                          {/* <p className="card-category">T<sub>cold</sub> outlet</p> */}
-                          <CardTitle tag="h6">T<sub>4</sub></CardTitle>
-                          <CardTitle tag="h3">{Tcout.toFixed(4)} <sup>O</sup>C</CardTitle>
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                  {/* <CardFooter>
-                    <hr />
-                    <div className="stats">
-                      <i className="tim-icons icon-watch-time" /> In the last hours
+                  </Col>
+                  <Col xs="7">
+                    <div className="numbers">
+                      {/* <p className="card-category">T<sub>cold</sub> inlet</p> */}
+                      <CardTitle tag="h6">T<sub>3</sub></CardTitle>
+                      <CardTitle tag="h3">{Tcin.toFixed(4)} <sup>O</sup>C</CardTitle>
                     </div>
-                  </CardFooter> */}
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs="6">
-                <Card className="card-stats">
-                  <CardBody>
-                    <Row>
-                      <Col xs="5">
-                        <div className="info-icon text-center icon-success">
-                          <i className="tim-icons icon-alert-circle-exc" />
-                        </div>
-                      </Col>
-                      <Col xs="7">
-                        <div className="numbers">
-                          {/* <p className="card-category">T<sub>cold</sub> inlet</p> */}
-                          <CardTitle tag="h6">T<sub>5</sub></CardTitle>
-                          <CardTitle tag="h3">{Fcold.toFixed(4)} <sup>O</sup>C</CardTitle>
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                  {/* <CardFooter>
-                    <hr />
-                    <div className="stats">
-                      <i className="tim-icons icon-trophy" /> Customers feedback
+                  </Col>
+                </Row>
+              </CardBody>
+              {/* <CardFooter>
+                <hr />
+                <div className="stats">
+                  <i className="tim-icons icon-trophy" /> Customers feedback
+                </div>
+              </CardFooter> */}
+            </Card>
+          </Col>
+          <Col xs="6">
+            <Card className="card-stats">
+              <CardBody>
+                <Row>
+                  <Col xs="5">
+                    <div className="info-icon text-center icon-success">
+                      <i className="tim-icons icon-alert-circle-exc" />
                     </div>
-                  </CardFooter> */}
-                </Card>
-              </Col>
-              <Col xs="6">
-                <Card className="card-stats">
-                  <CardBody>
-                    <Row>
-                      <Col xs="5">
-                        <div className="info-icon text-center icon-success">
-                          <i className="tim-icons icon-alert-circle-exc" />
-                        </div>
-                      </Col>
-                      <Col xs="7">
-                        <div className="numbers">
-                          {/* <p className="card-category">T<sub>cold</sub> outlet</p> */}
-                          <CardTitle tag="h6">T<sub>6</sub></CardTitle>
-                          <CardTitle tag="h3">{Fhot.toFixed(4)} <sup>O</sup>C</CardTitle>
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                  {/* <CardFooter>
-                    <hr />
-                    <div className="stats">
-                      <i className="tim-icons icon-watch-time" /> In the last hours
+                  </Col>
+                  <Col xs="7">
+                    <div className="numbers">
+                      {/* <p className="card-category">T<sub>cold</sub> outlet</p> */}
+                      <CardTitle tag="h6">T<sub>4</sub></CardTitle>
+                      <CardTitle tag="h3">{Tcout.toFixed(4)} <sup>O</sup>C</CardTitle>
                     </div>
-                  </CardFooter> */}
-                </Card>
-              </Col>
-            </Row>
-          </Col>  
+                  </Col>
+                </Row>
+              </CardBody>
+              {/* <CardFooter>
+                <hr />
+                <div className="stats">
+                  <i className="tim-icons icon-watch-time" /> In the last hours
+                </div>
+              </CardFooter> */}
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs="6">
+            <Card className="card-stats">
+              <CardBody>
+                <Row>
+                  <Col xs="5">
+                    <div className="info-icon text-center icon-success">
+                      <i className="tim-icons icon-alert-circle-exc" />
+                    </div>
+                  </Col>
+                  <Col xs="7">
+                    <div className="numbers">
+                      {/* <p className="card-category">T<sub>cold</sub> inlet</p> */}
+                      <CardTitle tag="h6">T<sub>5</sub></CardTitle>
+                      <CardTitle tag="h3">{Fcold.toFixed(4)} <sup>O</sup>C</CardTitle>
+                    </div>
+                  </Col>
+                </Row>
+              </CardBody>
+              {/* <CardFooter>
+                <hr />
+                <div className="stats">
+                  <i className="tim-icons icon-trophy" /> Customers feedback
+                </div>
+              </CardFooter> */}
+            </Card>
+          </Col>
+          <Col xs="6">
+            <Card className="card-stats">
+              <CardBody>
+                <Row>
+                  <Col xs="5">
+                    <div className="info-icon text-center icon-success">
+                      <i className="tim-icons icon-alert-circle-exc" />
+                    </div>
+                  </Col>
+                  <Col xs="7">
+                    <div className="numbers">
+                      {/* <p className="card-category">T<sub>cold</sub> outlet</p> */}
+                      <CardTitle tag="h6">T<sub>6</sub></CardTitle>
+                      <CardTitle tag="h3">{Fhot.toFixed(4)} <sup>O</sup>C</CardTitle>
+                    </div>
+                  </Col>
+                </Row>
+              </CardBody>
+              {/* <CardFooter>
+                <hr />
+                <div className="stats">
+                  <i className="tim-icons icon-watch-time" /> In the last hours
+                </div>
+              </CardFooter> */}
+            </Card>
+          </Col>
         </Row>
         <Row>
           <Col>
